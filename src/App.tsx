@@ -21,6 +21,7 @@ function App() {
     const [efficiency, setEfficiency] = useState<string[]>([]);
     const [latestEfficiency, setLatestEfficiency] = useState<string>("0.00");
     const [averageEfficiency, setAverageEfficiency] = useState<string>("0.00");
+    const [currentSpell, setCurrentSpell] = useState<Spell | null>(null);
 
     const getSpellFromCombination = (currentOrbs: Orb[]): Spell | null => {
         const composition = currentOrbs.reduce((map, orb) => {
@@ -49,7 +50,7 @@ function App() {
         }
 
         const orbInputsBetweenSpells: Orb[] = [];
-        let offset = 2;
+        let offset = 2; 
 
         while (inputLength - offset >= 0 && !isOfTypeCastedSpell(updatedInputs[inputLength - offset])) {
             const inputOrb = updatedInputs[inputLength - offset] as Orb;
@@ -91,9 +92,6 @@ function App() {
         setAverageEfficiency("0.00");
     };
 
-    const getCurrentSpell = (): Spell | null => {
-        return getSpellFromCombination(orbs);
-    };
 
     useEffect(() => {
         if (!started) return;
@@ -123,8 +121,14 @@ function App() {
                             }
                             return updatedInputs;
                         });
+                        setCurrentSpell(getSpellFromCombination(orbs));
                     }
                     break;
+                }
+                case "escape": {
+                    setStarted(false);
+                    setOrbs([Orb.Nothing, Orb.Nothing, Orb.Nothing]);
+                    setLatestEfficiency("0.00");
                 }
             }
         };
@@ -133,7 +137,6 @@ function App() {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [started, orbs, efficiency]);
 
-    const currentSpell = getCurrentSpell();
 
     const recentSpells = inputs
         .filter(isOfTypeCastedSpell)
@@ -148,7 +151,7 @@ function App() {
     return (
         <div className="dota-app">
             <div className="dota-header">
-                <h1>Invoker Trainer</h1>
+                <h1>Invoker Efficiency Trainer</h1>
             </div>
 
             {!started ? (
@@ -200,17 +203,6 @@ function App() {
                                             src={currentSpell.image || "/placeholder.svg"}
                                             alt={currentSpell.name}
                                             className="spell-image"
-                                            onError={(e) => {
-                                                // Fallback if image fails to load
-                                                e.currentTarget.style.display = "none"
-                                                const parent = e.currentTarget.parentElement
-                                                if (parent) {
-                                                    const span = document.createElement("span")
-                                                    span.className = "spell-name"
-                                                    span.textContent = currentSpell.name
-                                                    parent.appendChild(span)
-                                                }
-                                            }}
                                         />
                                         <span className="spell-name">{currentSpell.name}</span>
                                     </div>

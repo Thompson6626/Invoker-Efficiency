@@ -172,8 +172,8 @@ body {
 }
 
 .spell-icon {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 110px;
     background-color: rgba(26, 26, 29, 0.8);
     border: 2px solid var(--dota-gold);
     border-radius: 8px;

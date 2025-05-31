@@ -43,7 +43,7 @@ export const ICEWALL: Spell = {
 
 export const EMP: Spell = {
     name: "EMP",
-    image: "images/E.M.P_icon.webp",
+    image: "images/E.M.P._icon.webp",
     orbComposition: new Map([
         [Orb.Quas, 0],
         [Orb.Wex, 3],
